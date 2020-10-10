@@ -48,18 +48,7 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Customer  $customer
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Customer $customer)
-    {
-        //
+        return $customer;
     }
 
     /**
@@ -69,9 +58,15 @@ class CustomerController extends Controller
      * @param  \App\Models\Customer  $customer
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Customer $customer)
+    public function update(CustomerStoreRequest $request, Customer $customer)
     {
-        //
+        return DB::transaction(function()use($request,$customer){
+            $customer->fill($request->only('company','name','email','phone'));
+            $customer->save();
+            return $this->successResponse([
+                'message' => 'Cliente actualizado',
+            ],200);
+        });
     }
 
     /**
@@ -82,6 +77,11 @@ class CustomerController extends Controller
      */
     public function destroy(Customer $customer)
     {
-        //
+        return DB::transaction(function()use($customer){
+            $customer->delete();
+            return $this->successResponse([
+                'message' => 'Cliente eliminado',
+            ],200);
+        });
     }
 }
