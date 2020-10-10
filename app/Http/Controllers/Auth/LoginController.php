@@ -19,9 +19,7 @@ class LoginController extends Controller
     {
         $user = User::where('email', $request->email)->first();
         if (! $user || ! Hash::check($request->password, $user->password)) {
-            return ValidationException::withMessages([
-                'email' => ['The provided credentials are incorrect.'],
-            ]);
+            return $this->errorResponse('Credenciales no válidas',422);
         }
         $tokenResult = $user->createToken(Str::random(10))->plainTextToken;
         return $this->successResponse([

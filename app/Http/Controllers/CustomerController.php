@@ -34,9 +34,7 @@ class CustomerController extends Controller
         return DB::transaction(function()use($request){
             $customer = new Customer($request->only('company','name','email','phone'));
             $customer->save();
-            return $this->successResponse([
-                'message' => 'Cliente registrado',
-            ],200);
+            return $this->showOne($customer);
         });
     }
 
@@ -48,7 +46,7 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer)
     {
-        return $customer;
+        return $this->showOne($customer);
     }
 
     /**
@@ -63,9 +61,7 @@ class CustomerController extends Controller
         return DB::transaction(function()use($request,$customer){
             $customer->fill($request->only('company','name','email','phone'));
             $customer->save();
-            return $this->successResponse([
-                'message' => 'Cliente actualizado',
-            ],200);
+            return $this->showOne($customer);
         });
     }
 
