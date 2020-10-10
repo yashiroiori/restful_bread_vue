@@ -20,6 +20,10 @@ class LoginController extends Controller
                 'email' => ['The provided credentials are incorrect.'],
             ]);
         }
-        return $user->createToken(Str::random(10))->plainTextToken;
+        $tokenResult = $user->createToken(Str::random(10))->plainTextToken;
+        return $this->successResponse([
+            'access_token' => $tokenResult,
+            'token_type' => 'Bearer',
+        ],200);
     }
 }
